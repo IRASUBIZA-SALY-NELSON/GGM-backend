@@ -77,3 +77,4 @@ public class Product extends BaseEntity {
 ```
 
 This architecture ensures data consistency, auditability, and maintainability across your entire GOMA platform.
+# GGM-backend
