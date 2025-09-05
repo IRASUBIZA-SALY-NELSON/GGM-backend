@@ -45,11 +45,46 @@ public class ProductServiceImpl implements ProductService {
     public Product update(Long id, Product product) {
         Product existing = productRepository.findById(id).orElse(null);
         if (existing != null) {
-
-           //add updates here
+            // Update fields that are provided
+            if (product.getName() != null) {
+                existing.setName(product.getName());
+            }
+            if (product.getDescription() != null) {
+                existing.setDescription(product.getDescription());
+            }
+            if (product.getPrice() != null) {
+                existing.setPrice(product.getPrice());
+            }
+            if (product.getUnit() != 0) {
+                existing.setUnit(product.getUnit());
+            }
+            if (product.getSize() != null) {
+                existing.setSize(product.getSize());
+            }
+            if (product.getCode() != null) {
+                existing.setCode(product.getCode());
+            }
+            if (product.getCategory() != null) {
+                existing.setCategory(product.getCategory());
+            }
+            if (product.getBarcode() != null) {
+                existing.setBarcode(product.getBarcode());
+            }
+            if (product.getWeight() != null) {
+                existing.setWeight(product.getWeight());
+            }
+            if (product.getImageUrl() != null) {
+                existing.setImageUrl(product.getImageUrl());
+            }
+            if (product.getIsActive() != null) {
+                existing.setIsActive(product.getIsActive());
+            }
+            if (product.getAttributes() != null && !product.getAttributes().isEmpty()) {
+                existing.setAttributes(product.getAttributes());
+            }
+            
             return productRepository.save(existing);
         }
         return null;
-
     }
 }

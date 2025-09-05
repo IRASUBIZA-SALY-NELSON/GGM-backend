@@ -66,6 +66,7 @@ public class SecurityConfig {
 
                                 .requestMatchers(WHITE_LIST_URL).permitAll()
                                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                                .requestMatchers("/api/products/**").permitAll()
                                 .requestMatchers("/api/auth/register").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/users/me").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
@@ -91,10 +92,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8081"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true);
+        // Allow all origins - use setAllowedOrigins with "*" for all origins
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        // Allow all HTTP methods
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
+        // Allow all headers
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        // Disable credentials when allowing all origins
+        configuration.setAllowCredentials(false);
+        // Cache preflight response for 1 hour
+        configuration.setMaxAge(3600L);
+        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

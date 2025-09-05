@@ -1,13 +1,14 @@
 package vector.StockManagement.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vector.StockManagement.model.Order;
 import vector.StockManagement.model.enums.OrderStatus;
 import vector.StockManagement.services.OrderService;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -30,7 +31,22 @@ public class OrderController {
 
     @PostMapping
     public Order create(@RequestBody Order order) {
+        // Set default values for required fields
         order.setStatus(OrderStatus.SUBMITTED);
+        
+        // Initialize totals if not provided
+        if (order.getTotals() == null || order.getTotals().isEmpty()) {
+            order.getTotals().put("subtotal", BigDecimal.ZERO);
+            order.getTotals().put("tax", BigDecimal.ZERO);
+            order.getTotals().put("discount", BigDecimal.ZERO);
+            order.getTotals().put("grandTotal", BigDecimal.ZERO);
+        }
+        
+        // Set timestamps
+        order.setSubmittedAt(LocalDateTime.now());
+        
+        // For now, create a minimal order without required relationships
+        // This will need to be updated to handle proper user authentication
         return orderService.save(order);
     }
 

@@ -50,12 +50,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = true) // makes it optional
+    @JoinColumn(name = "tenant_id", nullable = true)     // allows NULL in the database
     @JsonIgnore
     private Tenant tenant;
-
-
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Activity> activities = new ArrayList<>();

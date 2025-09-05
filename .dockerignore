@@ -1,0 +1,32 @@
+# Maven
+target/
+!target/*.jar
+!target/**/lib/
+!target/**/classes/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# Other
+.env
+.env.local
+.env.*.local

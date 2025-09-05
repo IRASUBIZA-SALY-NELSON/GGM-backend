@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vector.StockManagement.model.Order;
 import vector.StockManagement.model.OrderLine;
+import vector.StockManagement.model.Product;
 import vector.StockManagement.repositories.OrderLineRepository;
 import vector.StockManagement.repositories.OrderRepository;
+import vector.StockManagement.repositories.ProductRepository;
 import vector.StockManagement.services.OrderLineService;
 
 import java.util.List;
@@ -17,6 +19,7 @@ public class OrderLineServiceImpl implements OrderLineService {
 
     private final OrderLineRepository orderLineRepository;
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public List<OrderLine> findAll() {
@@ -36,9 +39,16 @@ public class OrderLineServiceImpl implements OrderLineService {
     @Override
     public OrderLine createOrderlineByOrder(Long orderId, OrderLine orderLine){
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        
+        // Fetch the complete Product entity from database to avoid version field issues
+        if (orderLine.getProduct() != null && orderLine.getProduct().getId() != null) {
+            Product product = productRepository.findById(orderLine.getProduct().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+            orderLine.setProduct(product);
+        }
+        
         orderLine.setOrder(order);
         return orderLineRepository.save(orderLine);
-
     }
 
     @Override
