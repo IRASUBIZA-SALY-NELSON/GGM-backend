@@ -1,5 +1,5 @@
 # Multi-stage build for Spring Boot application
-FROM openjdk:21-jdk-slim as builder
+FROM eclipse-temurin:21-jdk-alpine as builder
 
 # Set working directory
 WORKDIR /app
@@ -23,13 +23,16 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
 # Runtime stage
-FROM openjdk:21-jre-slim
+FROM eclipse-temurin:21-jre-alpine
 
 # Set working directory
 WORKDIR /app
 
+# Install curl for health check
+RUN apk add --no-cache curl
+
 # Create non-root user for security
-RUN groupadd -r spring && useradd -r -g spring spring
+RUN addgroup -g 1001 -S spring && adduser -u 1001 -S spring -G spring
 
 # Copy the built JAR from builder stage
 COPY --from=builder /app/target/*.jar app.jar
