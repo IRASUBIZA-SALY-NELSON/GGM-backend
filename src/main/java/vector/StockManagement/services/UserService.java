@@ -36,23 +36,37 @@ public class UserService {
     }
 
     public User createUser(User newUser) {
+        // Encode the password before saving
+        if (newUser.getPassword() != null) {
+            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        }
 
-        // user should belong to a particular tenant.
+        // Set default user status if not provided
+        if (newUser.getUserStatus() == null) {
+            newUser.setUserStatus(vector.StockManagement.model.enums.UserStatus.ACTIVE);
+        }
+
+        // Handle tenant assignment
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof User user) {
             Tenant currentTenant = user.getTenant();
-            newUser.setTenant(currentTenant);
-            userRepository.save(newUser);
-            tenantRepository.save(currentTenant);
-            currentTenant.getUsers().add(newUser);
-
-            return newUser;
+            if (currentTenant != null) {
+                newUser.setTenant(currentTenant);
+                // Save the new user first
+                User savedUser = userRepository.save(newUser);
+                // Then add to tenant's user list and save tenant
+                currentTenant.getUsers().add(savedUser);
+                tenantRepository.save(currentTenant);
+                return savedUser;
+            } else {
+                // If current user has no tenant, save user without tenant
+                return userRepository.save(newUser);
+            }
+        } else {
+            // If no authenticated user context, save user without tenant
+            return userRepository.save(newUser);
         }
-        else {
-            throw new IllegalStateException("Authenticated user is not of type CustomUserDetails");
-        }
-
     }
 
     public List<User> getAllUsers() {

@@ -52,10 +52,12 @@ public class Order extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "distributor_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Distributor distributor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Store store;
 
     @NotNull
@@ -99,6 +101,7 @@ public class Order extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Tenant tenant;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

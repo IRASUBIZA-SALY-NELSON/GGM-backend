@@ -67,6 +67,7 @@ public class SecurityConfig {
                                 .requestMatchers(WHITE_LIST_URL).permitAll()
                                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
                                 .requestMatchers("/api/products/**").permitAll()
+                                .requestMatchers("/api/orders/**").hasAnyRole("ADMIN", "ACCOUNTANT", "DISTRIBUTOR", "SALES_MANAGER", "MANAGER")
                                 .requestMatchers("/api/auth/register").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/users/me").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")

@@ -3,6 +3,8 @@ package vector.StockManagement.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vector.StockManagement.dto.OrderDTO;
+import vector.StockManagement.mapper.OrderMapper;
 import vector.StockManagement.model.Order;
 import vector.StockManagement.model.enums.OrderStatus;
 import vector.StockManagement.services.OrderService;
@@ -17,16 +19,32 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderMapper orderMapper;
 
     @GetMapping
-    public List<Order> getAll() {
-        return orderService.findAll();
+    public ResponseEntity<List<OrderDTO>> getAll() {
+        try {
+            List<Order> orders = orderService.findAll();
+            List<OrderDTO> orderDTOs = orderMapper.toDTOList(orders);
+            return ResponseEntity.ok(orderDTOs);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getById(@PathVariable Long id) {
-        Order order = orderService.findById(id);
-        return order != null ? ResponseEntity.ok(order) : ResponseEntity.notFound().build();
+    public ResponseEntity<OrderDTO> getById(@PathVariable Long id) {
+        try {
+            Order order = orderService.findById(id);
+            if (order != null) {
+                OrderDTO orderDTO = orderMapper.toDTO(order);
+                return ResponseEntity.ok(orderDTO);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @PostMapping
