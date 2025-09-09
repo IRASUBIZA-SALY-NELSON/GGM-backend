@@ -17,6 +17,7 @@ import static vector.StockManagement.model.enums.Permission.*;
 @RequiredArgsConstructor
 public enum Role {
     USER(Collections.emptySet()),
+    TENANT(Collections.emptySet()),
     ADMIN(
             Set.of(ADMIN_READ,
                     ADMIN_CREATE,

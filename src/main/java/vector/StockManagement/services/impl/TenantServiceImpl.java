@@ -79,7 +79,7 @@ public class TenantServiceImpl implements TenantService {
         request.setPassword(dto.getPassword());
         request.setConfirmPassword(dto.getConfirmPassword());
         request.setGender(dto.getGender());
-        request.setRole(Role.ADMIN);
+        request.setRole(Role.TENANT);
         request.setTenant(tenant);
 
         return authenticationService.register(request);
